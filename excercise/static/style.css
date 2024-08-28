@@ -1,0 +1,131 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+main {
+  padding: 20px;
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.head .action {
+  display: flex;
+  gap: 10px;
+}
+
+.itemGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+}
+
+.item {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+.item .action {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+button,
+.btn {
+  padding: 10px 15px;
+  background-color: #466bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  text-decoration: none;
+}
+
+.btn.edit,
+button.edit {
+  background-color: #f39c12;
+}
+
+.btn.delete,
+button.delete {
+  background-color: #e74c3c;
+}
+
+.btn.newemp,
+button.newemp {
+  padding: 12px;
+  background-color: #f2f2f2;
+  border: 1px #000 solid;
+  color: #000;
+}
+
+input,
+select,
+textarea {
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+.form {
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+  padding: 10px;
+}
+
+.form input {
+  width: 100%;
+}
+
+.form, input, select{
+  margin-top: 20px;
+  width: 250px;
+}
+
+.form, button {
+  margin-top: 10px;
+}
+
+.form, textarea{
+  margin-top: 20px;
+}
+
+.from, label{
+  font-size: 25px;
+  font-weight: 500;
+}
+
+.emp-form-box{
+  margin-left: 80px;
+  margin-top: 10px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+table,
+th,
+td {
+  border: 1px solid black;
+}
+th,
+td {
+  padding: 8px;
+  text-align: left;
+}
+th {
+  background-color: #f2f2f2;
+}

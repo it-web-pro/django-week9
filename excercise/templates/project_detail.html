@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+
+{% block title %}Project Detail{% endblock %}
+
+{% block head %}
+<h1>Project Detail</h1>
+{% endblock %}
+
+{% block content %}
+<div>
+    <form class="form" id="project-form" method="post" style="margin-top: 15px; width: 100%;">
+        
+        {% csrf_token %}
+        <div class="" style="display: flex; gap: 10px">
+            <div class="div-name" style="width: 500px;">
+                <!-- label, form.name -->
+            </div>
+
+            <div class="div-start-date">
+                <!-- label, form.start_date -->
+            </div>
+
+            <div class="div-due-date">
+                <!-- label, form.due_date -->
+            </div>
+        </div>
+
+
+        <!-- label, form.description -->
+
+        <!-- label, form.manager -->
+
+        <!-- label, form.staff -->
+
+        <button type="submit" style="width: 80px;">Save</button>
+    </form>
+</div>
+
+<br />
+<br />
+
+<div>
+    <div class="head">
+        <h2>Employee in this project</h2>
+    </div>
+    <div class="itemGroup">
+        <!-- วนลูปแสดงข้อมูลพนักงาน -->
+        <div class="item">
+            <!-- id ของพนักงาน ชื่อ นามสกุล -->
+            <div></div>
+            <!-- position name -->
+            <div></div>
+
+            <div class="action">
+                <!-- path สำหรับ ลบพนักงานออกจาก project ใช้ method GET ใน View -->
+                <a href="#"><button class="delete">Kick Staff</button></a>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+

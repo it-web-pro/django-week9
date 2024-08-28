@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% block title%} Create Project {% endblock %}
+
+{% block head%}
+<h1>Form Projecte</h1>
+{% endblock %}
+
+{% block content %}
+<div class="emp-form-box">
+  <form method="post">
+    {% csrf_token %}
+      <!-- เรียกใช้ form -->
+    <button type="submit">Save</button>
+  </form>
+</div>
+
+{% endblock %}
