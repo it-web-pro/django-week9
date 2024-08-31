@@ -1,22 +1,51 @@
 # WEEK 9 EXCERCISE
-![Execer7-4](./images/ER7.png)
+
+![ERD](./images/ER7.png)
 
 ## Setup
-> หากมี project ของ week 8 สามารถใช้ในการทำแบบฝึกหัดครังนี้ต่อได้ครับ (แก้ไขไฟล์ models.py)
 
-1. สร้าง project ชื่อ `employee_management`
-2. สร้าง database ใหม่ชื่อ `employee_db`
-4. ให้ทำการ startapp ชื่อ `employee`
-5. ให้ copy code ข้างล่างไปใส่ที่ไฟล์ `employee/models.py`
+- หากมี project ของ week 8 สามารถใช้ในการทำแบบฝึกหัดครังนี้ต่อได้ครับ (แก้ไขไฟล์ models.py ให้ copy code ข้างล่างไปใส่ที่ไฟล์ `employee/models.py`)
+- ให้นักศึกษาลากโฟลเดอร์ templates ใน excercise ไปไว้ที่โฟลเดอร์ employee ขอโปรเจคนักศึกษา
 
-``` PYTHON
-    from django.db import models
+    ```text
+    templates/
+        - employee.hmtl
+        - employee_form.hmtl
+        - layout.html
+        - nav.html
+        - position.html
+        - project_detail.html
+        - project_form.html
+        - project.html
+    ```
 
+- ให้นักศึกษาลากโฟลเดอร์ static ใน excercise ไปใว้ในโฟลเดอร์ของโปรเจคนักศึกษา
+
+    ```text
+    static/
+        - style.css
+    ```
+
+## EXERCISE: Employee Form
+
+1. สร้าง class `EmployeeForm(forms.Form)` โดยให้มี field ดังนี้
+
+    - first_name
+    - last_name
+    - gender
+    - birth_date
+    - hire_date
+    - salary
+    - position
+
+    โดยให้คล้ายกับ model `Employee`
+
+    ```python
     class Employee(models.Model):
-        class Gender(models.TextChoices):
-            M = "M", "Male"
-            F = "F", "Female"
-            LGBT = "LGBT", "LGBT"
+        class Gender(models.Choices):
+            M = "M"
+            F = "F"
+            LGBT = "LGBT"
             
         first_name = models.CharField(max_length=155)
         last_name = models.CharField(max_length=155)
@@ -30,105 +59,57 @@
             null=True, 
             blank=True
         )
-        
-        def get_full_name(self):
-            return f"{self.first_name} {self.last_name}"
-        
-        def __str__(self) -> str:
-            return self.get_full_name()
-        
-    class EmployeeAddress(models.Model):
-        employee = models.OneToOneField("employee.Employee", on_delete=models.PROTECT)
-        location = models.TextField(null=True, blank=True)
-        district = models.CharField(max_length=100)
-        province = models.CharField(max_length=100)
-        postal_code = models.CharField(max_length=15)
-        
-        
-    class Department(models.Model):
-        name = models.CharField(max_length=155)
-        manager = models.OneToOneField(
-            "employee.Employee", 
-            on_delete=models.SET_NULL, 
-            null=True, 
-            blank=True
-        )
-        
-        
-    class Position(models.Model):
-        name = models.CharField(max_length=155)
-        description = models.TextField(null=True, blank=True)
-        department = models.ForeignKey(
-            "employee.Department",
-            on_delete=models.SET_NULL, 
-            null=True, 
-            blank=True
-        )
-        
-        def __str__(self):
-            return str(self.name)
+    ```
 
+**Hint:** สังเกตว่ามี field ที่เป็นตัวเลือก (select) คือ Gender และ Position
 
-    class Project(models.Model):
-        name = models.CharField(max_length=255, unique=True)
-        description = models.TextField(null=True, blank=True)
-        manager = models.OneToOneField(
-            "employee.Employee", 
-            on_delete=models.SET_NULL, 
-            null=True, 
-            blank=True,
-            related_name="project_mamager"
-        )
-        due_date = models.DateField()
-        start_date = models.DateField()
-        staff = models.ManyToManyField("employee.Employee")
-        
-        def __str__(self):
-            return str(self.name)
-        
+สำหรับ `Gender` ควรใช้งาน `ChoiceField` ซึ่งมีตัวอย่างดังนี้
+
+```python
+from django import forms
+
+class MyForm(forms.Form):
+    AGE_CHOICES = (
+        (1, 'Under 18'),
+        (2, '19-24'),
+        (3, '25-35'),
+        (4, 'Older than 35')
+    )
+
+    age = forms.ChoiceField(
+        choices=AGE_CHOICES
+    )
 ```
 
-6. ให้ทำการ makemigrations และ migrate
-7. ให้นักศึกษาลากโฟลเดอร์ templates ใน excercise ไปไว้ที่โฟลเดอร์ employee ขอโปรเจคนักศึกษา
-    ```
-    templates/
-        - employee.hmtl
-        - employee_form.hmtl
-        - layout.html
-        - nav.html
-        - position.html
-        - project_detail.html
-        - project_form.html
-        - project.html
-    ```
-8. ให้นักศึกษาลากโฟลเดอร์ static ใน excercise ไปใว้ในโฟลเดอร์ของโปรเจคนักศึกษา
-    ```
-    static/
-        - style.css
-    ```
+สำหรับ `Position` ควรใช้งาน `ModelChoiceField` ซึ่งมีตัวอย่างดังนี้
 
-## 1. FORM EMPLOYEE
+```python
+from django import forms
+from .models import Developer
 
-1.1 กำหนด path ให้กับปุ่ม New Employee ไปยังหน้า form เพิ่มข้อมูลพนักงานที่ไฟล์ `employee_form.html` แสดงผลหน้า form ถูกต้องดังภาพ
+class MyForm(forms.Form):
+    AGE_CHOICES = (
+        (1, 'Under 18'),
+        (2, '19-24'),
+        (3, '25-35'),
+        (4, 'Older than 35')
+    )
+    mentor = forms.ModelChoiceField(
+        queryset=Developer.objects.filter(level=Developer.SENIOR)
+    )
+    age = forms.ChoiceField(
+        choices=AGE_CHOICES
+    )
+```
+
+**Hint:** สังเกตว่ามี field ที่เป็นการเลือกวันที่ (date picker) คือ Birthdate และ Hiredate
+
+ควรใช้งาน `DateField` และ widget `DateInput` (สังเกตว่า Django จะ render `<input type="text">` แต่เราอยากได้เป็น `type=date`)
+
+2. ในไฟล์ `employee.html` กำหนด path ให้กับปุ่ม "New Employee" ไปยังหน้า form เพิ่มข้อมูลพนักงานที่ไฟล์ `employee_form.html` แสดงผลหน้า form ถูกต้องดังภาพ (0.5 คะแนน)
 
 ![emp-form](images/form_emp.png)
 
-1.2 บันทึกข้อมูลพนักงาน หลังจากบันทึกสำเร็จให้ redirect กลับไปที่หน้าตารางพนักงาน โดยที่หน้าพนักงานเรียงข้อมูลจากวันที่เริ่มงาน (hire date)
+3. เมื่อกด "Save" ในหน้า `employee_form.html` ให้บันทึกข้อมูลพนักงานใหม่ลงฐานข้อมูล หลังจากบันทึกสำเร็จให้ redirect กลับไปที่หน้าตารางพนักงาน โดยที่หน้าพนักงานเรียงข้อมูลจากวันที่เริ่มงาน (hire date) จากมากไปน้อย (0.5 คะแนน)
 
 ![emp-tb](images/emp-table.png)
-
-## 2. FORM PROJECT
-
-2.1 กำหนด path ให้กดปุ่ม New Project ไปยังหน้า form สำหรับเพิ่มข้อมูล Project `project_form.html` แสดงหน้า form ให้ถูกต้องดังภาพ
-
-![project-form](images/form_project.png)
-
-2.2 บันทึกข้อมูลโปรเจคใหม่ หลังจากยันทึกสำเร็จให้ redirect กลับไปที่หน้า project list
-
-![project-list](images/project-list.png)
-
-2.3 เมื่อกดปุ่มแก้ไขที่หน้าให้ ไปยังหน้า project detail และแสดงผล Form สำหรับแก้ไขข้อมูลโปรเจคดังภาพ
-
-![project-form](images/project-detail.png)
-
-2.4 เมื่อกดปุ่ม Save ให้ทำการแก้ไขข้อมูล project และสามารถเพิ่มพนักงานเข้ามาใน Project ได้ หลังจากแก้ไขให้ redirect กลับมาหน้าเดิมพร้อมแสดงข้อมูลที่ถูกแก้ไข
