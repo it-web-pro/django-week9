@@ -5,7 +5,7 @@
 เรามาลอง render `ContactForm` ตามขั้นตอนดังนี้กัน
 
 1. สร้าง app `contact`
-2. นำ code ของ class `ContactForm` ไปไว้ในไฟล์ `myform/forms.py`
+2. นำ code ของ class `ContactForm` ไปไว้ในไฟล์ `contact/forms.py`
 
 ```python
 from django import forms
@@ -17,7 +17,7 @@ class ContactForm(forms.Form):
     cc_myself = forms.BooleanField(required=False)
 ```
 
-3. สร้าง view สำหรับ render form อันนี้ โดยนำ code ด้านล่างไปใส่ในไฟล์ `myform/views.py`
+3. สร้าง view สำหรับ render form อันนี้ โดยนำ code ด้านล่างไปใส่ในไฟล์ `contact/views.py`
 
 ```python
 from django.shortcuts import render, redirect
@@ -69,23 +69,24 @@ from django.urls import path, include
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("myform/", include("myform.urls"))
+    path("contact/", include("contact.urls"))
 ]
 ```
 
-`myform/urls.py`
+`contact/urls.py`
 
 ```python
 from django.urls import path
 
-from myform import views
+from contact import views
 
 urlpatterns = [
-    path("contact/", views.contact_us, name="contact_us"),
+    path("", views.contact_us, name="contact_us"),
     path("thanks/", views.thanks, name="thanks"),
 ]
 ```
 
-5. เพิ่มไฟล์ `contact_us.html` ใน `myform/templates/`
+5. เพิ่มไฟล์ `contact_us.html` ใน `contact/templates/`
 
 ```html
 <!DOCTYPE html>
@@ -110,7 +111,7 @@ urlpatterns = [
 </html>
 ```
 
-6. สั่ง runserver และเปิดหน้าฟอร์มที่ `http://127.0.0.1:8000/myform/contact/`
+6. สั่ง runserver และเปิดหน้าฟอร์มที่ `http://127.0.0.1:8000/contact/`
 
 ![contact_form](images/contact.png)
 
