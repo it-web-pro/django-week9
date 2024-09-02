@@ -20,7 +20,10 @@ class ContactForm(forms.Form):
 3. สร้าง view สำหรับ render form อันนี้ โดยนำ code ด้านล่างไปใส่ในไฟล์ `contact/views.py`
 
 ```python
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
+
+from contact.forms import ContactForm
 
 def contact_us(request):
 
@@ -101,7 +104,7 @@ urlpatterns = [
     <form method="POST">
         {% csrf_token %}
     <table>
-        {{form}}
+        {{form.as_table}}
     </table>
     <p>
         <input type="submit" value="Submit">
