@@ -28,7 +28,7 @@
 
 ## EXERCISE: Employee Form
 
-1. สร้าง class `EmployeeForm(forms.Form)` โดยให้มี field ดังนี้
+1. สร้าง class `EmployeeForm(forms.Form)` โดยให้มี field ดังนี้ (1 คะแนน)
 
     - first_name
     - last_name
