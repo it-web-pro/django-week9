@@ -1,0 +1,47 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      {% block title %}
+        Title
+      {% endblock %}
+    </title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style type="text/tailwindcss">
+      @layer components {
+        .form-control {
+          @apply [&>*>input]:mt-1 [&>*>input]:border [&>*>input]:rounded-md [&>*>input]:w-full [&>*>input]:px-3 [&>*>input]:py-2 [&>*>input]:mt-1 [&>*>input]:border [&>*>input]:rounded-md [&>*>input]:w-full [&>*>input]:px-3 [&>*>input]:py-2  [&>*>select]:mt-1 [&>*>select]:border [&>*>select]:rounded-md [&>*>select]:w-full [&>*>select]:px-3 [&>*>select]:py-2 [&>*>select]:mt-1 [&>*>select]:border [&>*>select]:rounded-md [&>*>select]:w-full [&>*>select]:px-3 [&>*>select]:py-2 [&>*>textarea]:mt-1 [&>*>textarea]:border [&>*>textarea]:rounded-md [&>*>textarea]:w-full [&>*>textarea]:px-3 [&>*>textarea]:py-2 [&>*>textarea]:mt-1 [&>*>textarea]:border [&>*>textarea]:rounded-md [&>*>textarea]:w-full [&>*>textarea]:px-3 [&>*>textarea]:py-2
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    {% block nav %}
+      {% include 'nav.html' %}
+    {% endblock %}
+
+    <section class="p-6 max-w-8xl mx-auto">
+      <article aria-label="Head Content">
+        {% block head %}
+          <h1>Head</h1>
+        {% endblock %}
+      </article>
+
+      <article aria-label="Body Content">
+        {% block content %}
+          Content
+        {% endblock %}
+      </article>
+    </section>
+    
+    {% block script %}
+      <script src="/"></script>
+    {% endblock %}
+  </body>
+
+</html>

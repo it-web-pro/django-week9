@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% load custom_filter %}
+
+{% block title %}
+  Student Dashboard
+{% endblock %}
+
+{% block head %}
+  <div class="mb-6 text-gray-800 flex sm:flex-row flex-col gap-4 justify-between">
+    <div class="flex items-center justify-between">
+      <div class="flex flex-col gap-1">
+        <h1 class="text-3xl font-bold text-orange-500">Student Dashboard</h1>
+        <p class="text-gray-500">
+          Total <span class="font-medium text-blue-500">{{ }}</span> Students
+        </p>
+        <a href="" class="px-3 py-1.5 w-fit rounded-lg bg-orange-500 text-sm text-white hover:bg-orange-600">Create Student</a>
+      </div>
+    </div>
+    <div aria-label="Filter content" class="sm:self-end sm:place-items-end flex flex-col gap-y-2">
+      <label class="text-2xl font-medium" for="search">Quick Search</label>
+      <div class="flex flex-row gap-x-4 flex-wrap sm:justify-end" aria-label="Advanced Filters">
+        <div aria-label="Full name">
+          {% if filter == '' or filter == None %}
+            <input class="cursor-pointer" type="radio" id="fullname" name="a_filter" value="" checked />
+          {% else %}
+            <input class="cursor-pointer" type="radio" id="fullname" name="a_filter" value="" />
+          {% endif %}
+          <label class="cursor-pointer" for="fullname">Full Name</label>
+        </div>
+        <div aria-label="Email">
+          {% if filter == 'email' %}
+            <input class="cursor-pointer" type="radio" id="email" name="a_filter" value="email" checked />
+          {% else %}
+            <input class="cursor-pointer" type="radio" id="email" name="a_filter" value="email" />
+          {% endif %}
+          <label class="cursor-pointer" for="email">Email</label>
+        </div>
+
+        <div aria-label="Faculty">
+          {% if filter == 'faculty' %}
+            <input class="cursor-pointer" type="radio" id="faculty" name="a_filter" value="faculty" checked />
+          {% else %}
+            <input class="cursor-pointer" type="radio" id="faculty" name="a_filter" value="faculty" />
+          {% endif %}
+          <label class="cursor-pointer" for="faculty">Faculty</label>
+        </div>
+      </div>
+
+      <input class="block w-[300px] rounded-md field-sizing-content border-[1px] px-4 py-2" id="search" type="text" placeholder="Search students..." autocomplete="search" value="{{ }}" title="Filter data" />
+    </div>
+  </div>
+{% endblock %}
+
+{% block content %}
+  <div class="overflow-x-auto bg-white rounded-lg shadow border border-orange-100">
+    <table class="table-fixed min-w-full divide-y divide-orange-100">
+      <thead class="bg-orange-100 text-left text-sm font-semibold text-gray-700">
+        <tr>
+          <th class="px-4 py-3">Student ID</th>
+          <th class="px-4 py-3">Full Name</th>
+          <th class="px-4 py-3">Email</th>
+          <th class="px-4 py-3">Phone number</th>
+          <th class="px-4 py-3">Faculty</th>
+          <th class="px-4 py-3">Registration Section</th>
+          <th class="px-4 py-3">Options</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100 text-sm">
+        {% for student in student_list %}
+          <tr class="hover:bg-orange-50 transition">
+            <td class="px-4 py-3">{{ }}</td>
+            <td class="px-4 py-3 font-medium">{{ }}</td>
+            <td class="px-4 py-3">{{ }}</td>
+            <td class="px-4 py-3">{{ }}</td>
+            <td class="px-4 py-3">{{ }}</td>
+            <td class="px-4 py-3 text-nowrap">
+              {% if student.enrolled_sections.count %}
+                {% for section in student.enrolled_sections.all|sortSectionByDayOfWeek|dictsort:'day_of_week_num' %}
+                  {{ }}<br />
+                {% endfor %}
+              {% else %}
+                -
+              {% endif %}
+            </td>
+            <td class="px-4 py-3">
+              <!-- Hint: ใช้ template tag 'url' -->
+              <a href="" title="Modify" class="cursor-pointer">
+                <button class="relative group text-xs font-medium flex flex-row items-center gap-x-1.5 px-3 py-1.5 rounded-xl bg-orange-200 text-orange-800">
+                  <div class="bg-black size-full transition-opacity absolute duration-300 top-0 right-0 opacity-0 rounded-xl group-hover:opacity-10 group-active:opacity-15"></div>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
+                  </svg>
+                  Edit
+                </button>
+              </a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="4" class="text-center text-gray-400 px-4 py-6">No students found.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}
+
+{% block script %}
+  {% comment %} ใส่ script block ให้ตรงกับ Script ของหน้า {% endcomment %}
+{% endblock %}
