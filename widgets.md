@@ -2,7 +2,7 @@
 
 ในขณะที่ `Form` fields ใช้ในการจัดการการ validate ข้อมูล input ของ form ซึ่งจะใช้งานใน "view" แต่ `Widget` ใช้ในการ render HTML ของ input ใน form ซึ่งจะใช้งานใน "template" เป็นหลัก
 
-โดยปกติเมื่อเราทำการกำหนด field ใน form Django จะทำการเลือกใช้งาน widget ที่เหมาะสมกับ field นั้นๆ ให้เอง ใน doc ของ Django จะระบุไว้ว่า form field ไหนใช้ widget อะไร [Doc](https://docs.djangoproject.com/en/5.1/ref/forms/fields/#built-in-fields)
+โดยปกติเมื่อเราทำการกำหนด field ใน form Django จะทำการเลือกใช้งาน widget ที่เหมาะสมกับ field นั้นๆ ให้เอง ใน doc ของ Django จะระบุไว้ว่า form field ไหนใช้ widget อะไร [Doc](https://docs.djangoproject.com/en/5.2/ref/forms/widgets/)
 
 ยกตัวอย่างเช่น
 

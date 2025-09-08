@@ -4,7 +4,7 @@
 
 ในภาษา HMTL ในการที่ผู้ใช้งานจะ เขียน text เลือกตัวเลือก เลือกวันที่ และอื่นๆ แล้วส่งข้อมูลนั้นมาที่ web server จะสามารถทำได้ผ่าน form หรือ `<form>...</form>`
 
-โดยการใช้งาน tag `<form>` นั้นจะต้องกำหนดว่า จะส่งข้อมูลไปที่ไหน (`action`) และ จะส่งข้อมูลด้วยวิธีอะไร (`method`)
+โดยการใช้งาน tag `<form>` นั้นจะต้องกำหนดว่า จะส่งข้อมูลไปที่ไหน (`action`) และ จะส่งข้อมูลด้วยวิธีอะไร (`method`) [HTML form tag](https://www.w3schools.com/tags/tag_form.asp)
 
 โดย form นั้นจะสามารถส่งข้อมูลด้วย method เป็น `GET` หรือ `POST` เท่านั้น
 - GET: จะทำการส่งข้อมูลที่กรอกในฟอร์มไปกับ url เช่น https://docs.djangoproject.com/search/?q=forms&release=1
@@ -74,7 +74,9 @@ def get_name(request):
 
 การทำงานของ view นี้คือ ถ้าได้รับ request เป็น method GET จะทำการสร้าง form เปล่าๆ ที่เป็น instance ของ NameForm และจะถูกนำไป render ในไฟล์ name.html
 
-ส่วนในกรณีที่รับ request เป็น method POST จะนำข้อมูลที่แนบมากับ body ของ request (request.POST) ไปสร้าง instance ของ NameForm ที่มีข้อมูลที่ถูกส่งมาข้อตอนนี้เรียกว่า "binding data to the form" จากนั้นทำการเรียก form.is_valid() เพื่อทำการ validate ค่าที่ได้รับมาว่าถูกต้องตรงตามที่กำหนดไว้ใน class NameForm หรือไม่
+ส่วนในกรณีที่รับ request เป็น method POST จะนำข้อมูลที่แนบมากับ body ของ request (request.POST) ไปสร้าง instance ของ NameForm ที่มีข้อมูลที่ถูกส่งมา
+
+ขั้นตอนนี้เรียกว่า "binding data to the form" จากนั้นทำการเรียก form.is_valid() เพื่อทำการ validate ค่าที่ได้รับมาว่าถูกต้องตรงตามที่กำหนดไว้ใน class NameForm หรือไม่
 
 ### The template
 
@@ -88,15 +90,13 @@ def get_name(request):
 </form>
 ```
 
-เรามาทดลองใช้งานดูกัน
+เรามาทดลองใช้งานดูกัน -> ไปที่ `tutorial.md` ได้เลยครับ
 
-### More on fields
+#### Widgets
 
-เรามาลองดูตัวอย่างที่สมจริงกว่าตัวอย่างง่ายๆ เมื่อครู่กันนะครับ
+Formfield แต่ละประเภทจะมีการใช้งาน `Widget` class [Doc](https://docs.djangoproject.com/en/5.1/ref/forms/widgets/)
 
-สร้าง class ContactForm ใน `forms.py`
-
-จริงๆ ประเภท field ที่ Django มีให้เลือกนั้นมีมากมายเลย [Doc](https://docs.djangoproject.com/en/5.1/ref/forms/fields/) ยกตัวอย่างเช่น
+ซึ่ง widget นี้ละที่เป็นตัวกำหนด input tag ที่เหมาะสม ยกตัวอย่างเช่น `CharField` จะมี `TextInput` widget ซึ่งจะถูกแปลงเป็น ```<input type="text">``` ใน HMTL แต่ในตัวอย่างด้านล่างจะเห็นว่า field `message` เราเปลี่ยนไปเป็น widget `Textarea` แทน
 
 ```python
 from django import forms
@@ -109,46 +109,3 @@ class ContactForm(forms.Form):
     cc_myself = forms.BooleanField(required=False)
 ```
 
-#### Widgets
-
-Formfield แต่ละประเภทจะมีการใช้งาน `Widget` class [Doc](https://docs.djangoproject.com/en/5.1/ref/forms/widgets/)
-
-ซึ่ง widget นี้ละที่เป็นตัวกำหนด input tag ที่เหมาะสม ยกตัวอย่างเช่น `CharField` จะมี `TextInput` widget ซึ่งจะถูกแปลงเป็น ```<input type="text">``` ใน HMTL แต่ในตัวอย่างด้านบนจะเห็นว่า field `message` เราเปลี่ยนไปเป็น widget `Textarea` แทน
-
-#### Field data
-
-เมื่อข้อมูลใน form ถูก submit มาจะเกิดขึ้นตอนดังนี้:
-
-1. สร้าง instance ของ class Form โดยส่ง `request.POST` เข้าไปใน constructor
-2. เรียก `is_valid()` เพื่อทำการ validate ข้อมูล
-3. โดยถ้า validate ข้อมูลผ่าน เราจะสามารถเข้าถึง `cleaned_data` ได้ (โดย cleaned_data จะเป็นข้อมูลที่ submit มาที่ถูกแปลงเป็น data type ของ Python ตามที่เรากำหนดใน class Form แล้ว)
-
-```python
-from django.shortcuts import render, redirect
-
-def contact_us(request):
-
-    if request.method == "POST":
-        # bind data to form
-        form = ContactForm(request.POST)
-        # validate data in the form
-        if form.is_valid():
-            # access cleaned_data
-            subject = form.cleaned_data["subject"]
-            message = form.cleaned_data["message"]
-            sender = form.cleaned_data["sender"]
-            cc_myself = form.cleaned_data["cc_myself"]
-
-            recipients = ["info@example.com"]
-            if cc_myself:
-                recipients.append(sender)
-
-            send_mail(subject, message, sender, recipients)
-            return redirect("/thanks/")
-    else:
-        form = ContactForm()
-    
-    return render(request, "contact_us.html", {"form": form})
-```
-
-**Important: การจะเข้าถึง form.cleaned_data ได้จะต้องเรียก is_valid() ก่อนเสมอ และจะต้อง is_valid() == True**

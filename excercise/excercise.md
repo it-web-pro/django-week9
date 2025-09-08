@@ -147,7 +147,7 @@
 
     **Hint:** สังเกตว่ามี field ที่เป็นตัวเลือก คือ Faculty (select) และ Enrolled Sections (select multiple)
 
-    สำหรับ `Faculty` ควรใช้งาน `ModelChoiceField` ซึ่งมีตัวอย่างดังนี้
+    สำหรับ `faculty` ควรใช้งาน `ModelChoiceField` ซึ่งมีตัวอย่างดังนี้
 
     ```python
     from django import forms
@@ -161,7 +161,7 @@
         )
     ```
 
-    สำหรับ `Enrolled Sections` ควรใช้งาน `ModelMultipleChoiceField` ซึ่งมีตัวอย่างดังนี้
+    สำหรับ `enrolled_sections` ควรใช้งาน `ModelMultipleChoiceField` ซึ่งมีตัวอย่างดังนี้
 
     ```python
     from django import forms
@@ -171,11 +171,10 @@
         my_multiple_field = forms.ModelMultipleChoiceField(
             queryset=MyModel.objects.all(),
             required=False,
-            widget=forms.CheckboxSelectMultiple
         )
     ```
 
-2. ในไฟล์ `index.html` กำหนด path ให้กับปุ่ม "Create Student" ไปยังหน้า form เพิ่มข้อมูลนักศึกษาที่ไฟล์ `create_student.html` แสดงผลหน้า form ถูกต้องดังภาพ (0.5 คะแนน)
+2. ในไฟล์ `index.html` กำหนด path ให้กับปุ่ม "Create Student" ไปยังหน้า form เพิ่มข้อมูลนักศึกษาที่ไฟล์ `create_student.html` แสดงผลหน้า form ถูกต้องดังภาพ (0.25 คะแนน)
 
     ![stu-form](images/form_stu.png)
 
@@ -183,10 +182,14 @@
 
     ![stu-tb](images/stu-table.png)
 
-4. ในไฟล์ `index.html` กำหนด path ให้กับปุ่ม "Edit" ของแต่ละข้อมูลของนักศึกษา เพื่อไปยังหน้า form แก้ไขข้อมูลนักศึกษาที่ไฟล์ `update_student.html` แสดงผลหน้า form ถูกต้องดังภาพ (0.5 คะแนน)
+4. ในไฟล์ `index.html` กำหนด path ให้กับปุ่ม "Edit" ของแต่ละข้อมูลของนักศึกษา เพื่อไปยังหน้า form แก้ไขข้อมูลนักศึกษาที่ไฟล์ `update_student.html` แสดงผลหน้า form ถูกต้องดังภาพ (0.25 คะแนน)
 
     ![stu-update-form](images/form_update_stu.png)
 
 5. เมื่อกด "Update" ในหน้า `update_student.html` ให้บันทึกข้อมูลนักศึกษาที่ถูกแก้ไขใหม่ลงฐานข้อมูล หลังจากบันทึกสำเร็จให้ redirect กลับไปที่หน้าตารางพนักงาน (0.5 คะแนน)
 
     ![stu-tb](images/stu-table.png)
+
+6. ลองปรับใช้ widget (0.5)
+    - Field `faculty` เป็น radio button โดยใช้ widget `RadioSelect` [ref](https://docs.djangoproject.com/en/5.2/ref/forms/widgets/#radioselect) 
+    - Field `address` เป็น textarea โดยใช้ widget `Textarea` [ref](https://docs.djangoproject.com/en/5.2/ref/forms/widgets/#textarea)
