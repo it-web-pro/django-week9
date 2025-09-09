@@ -91,21 +91,3 @@ def get_name(request):
 ```
 
 เรามาทดลองใช้งานดูกัน -> ไปที่ `tutorial.md` ได้เลยครับ
-
-#### Widgets
-
-Formfield แต่ละประเภทจะมีการใช้งาน `Widget` class [Doc](https://docs.djangoproject.com/en/5.1/ref/forms/widgets/)
-
-ซึ่ง widget นี้ละที่เป็นตัวกำหนด input tag ที่เหมาะสม ยกตัวอย่างเช่น `CharField` จะมี `TextInput` widget ซึ่งจะถูกแปลงเป็น ```<input type="text">``` ใน HMTL แต่ในตัวอย่างด้านล่างจะเห็นว่า field `message` เราเปลี่ยนไปเป็น widget `Textarea` แทน
-
-```python
-from django import forms
-
-
-class ContactForm(forms.Form):
-    subject = forms.CharField(max_length=100)
-    message = forms.CharField(widget=forms.Textarea)
-    sender = forms.EmailField()
-    cc_myself = forms.BooleanField(required=False)
-```
-

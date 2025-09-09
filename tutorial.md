@@ -4,7 +4,7 @@
 
 เรามาลอง render `ContactForm` ตามขั้นตอนดังนี้กัน
 
-1. สร้าง app `contact`
+1. สร้าง project `week9_tutorial` และ app `contact`
 2. นำ code ของ class `ContactForm` ไปไว้ในไฟล์ `contact/forms.py`
 
 ```python
@@ -16,6 +16,8 @@ class ContactForm(forms.Form):
     sender = forms.EmailField()
     cc_myself = forms.BooleanField(required=False)
 ```
+
+จริงๆ ประเภท field ที่ Django มีให้เลือกนั้นมีมากมายเลย [Doc](https://docs.djangoproject.com/en/5.2/ref/forms/fields/)
 
 3. สร้าง view สำหรับ render form อันนี้ โดยนำ code ด้านล่างไปใส่ในไฟล์ `contact/views.py`
 
@@ -61,6 +63,8 @@ def thanks(request):
     return HttpResponse("THANKS!!!")
 ```
 
+**Important: การจะเข้าถึง form.cleaned_data ได้จะต้องเรียก is_valid() ก่อนเสมอ และจะต้อง is_valid() == True**
+
 4. กำหนด path ใน `urls.py` ให้ชี้มาที่ view นี้
 
 `week9_tutorial/urls.py` -> ไฟล์ urls.py ไฟล์หลัก
@@ -71,7 +75,6 @@ from django.urls import path, include
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("myform/", include("myform.urls"))
     path("contact/", include("contact.urls"))
 ]
 ```
@@ -168,6 +171,125 @@ urlpatterns = [
 </html>
 ```
 
+
+## Outputting forms as HTML
+
+```python
+data = {
+    "subject": "hello",
+    "message": "Hi there",
+    "sender": "foo@example.com",
+    "cc_myself": True,
+}
+f = ContactForm(data)
+print(f)
+```
+
+เราสามารถ render form ใน template ได้หลายรูปแบบ
+
+- `as_div()` (เป็นตัวเลือก default)
+
+```html
+<div>
+    <label for="id_subject">Subject:</label>
+    <input type="text" name="subject" maxlength="100" required id="id_subject">
+</div>
+<div>
+    <label for="id_message">Message:</label>
+    <input type="text" name="message" required id="id_message">
+</div>
+<div>
+    <label for="id_sender">Sender:</label>
+    <input type="email" name="sender" required id="id_sender">
+</div>
+<div>
+    <label for="id_cc_myself">Cc myself:</label>
+    <input type="checkbox" name="cc_myself" id="id_cc_myself">
+</div>
+```
+
+- `as_p()`
+
+```html
+<p>
+    <label for="id_subject">Subject:</label> 
+    <input id="id_subject" type="text" name="subject" maxlength="100" required>
+</p>
+<p>
+    <label for="id_message">Message:</label> 
+    <input type="text" name="message" id="id_message" required>
+</p>
+<p>
+    <label for="id_sender">Sender:</label> 
+    <input type="email" name="sender" id="id_sender" required>
+</p>
+<p>
+    <label for="id_cc_myself">Cc myself:</label> 
+    <input type="checkbox" name="cc_myself" id="id_cc_myself">
+</p>
+```
+
+- `as_ul()`
+
+```html
+<li>
+    <label for="id_subject">Subject:</label> 
+    <input id="id_subject" type="text" name="subject" maxlength="100" required>
+</li>
+<li>
+    <label for="id_message">Message:</label> 
+    <input type="text" name="message" id="id_message" required>
+</li>
+<li>
+    <label for="id_sender">Sender:</label> 
+    <input type="email" name="sender" id="id_sender" required>
+</li>
+<li>
+    <label for="id_cc_myself">Cc myself:</label> 
+    <input type="checkbox" name="cc_myself" id="id_cc_myself">
+</li>
+```
+
+- `as_table()`
+
+```html
+<tr>
+    <th>
+        <label for="id_subject">Subject:</label>
+    </th>
+    <td>
+        <input id="id_subject" type="text" name="subject" maxlength="100" required>
+    </td>
+</tr>
+<tr>
+    <th>
+        <label for="id_message">Message:</label>
+    </th>
+    <td>
+        <input type="text" name="message" id="id_message" required>
+    </td>
+</tr>
+<tr>
+    <th>
+        <label for="id_sender">Sender:</label>
+    </th>
+    <td>
+        <input type="email" name="sender" id="id_sender" required>
+    </td>
+</tr>
+<tr>
+    <th>
+        <label for="id_cc_myself">Cc myself:</label>
+    </th>
+    <td>
+        <input type="checkbox" name="cc_myself" id="id_cc_myself">
+    </td>
+</tr>
+```
+
+**Important: จะเห็นได้ว่าไม่มี tag `<form></form>` และปุ่ม submit `<input type="submit">`**
+
+
 ## Rendering fields manually
 
 ในกรณีที่ต้องการควบคุม UX UI ของ form เอง เราก็สามารถทำได้ ยกตัวอย่างเช่น
@@ -218,10 +340,6 @@ urlpatterns = [
 - {{ field.label }}
 - {{ field.label_tag }}
 
-```html
-<label for="id_email">Email address:</label>
-```
-
 นอกจากนั้นเรายังสามารถ loop เข้าไปแต่ละ field ใน form ได้ ดังตัวอย่าง
 
 ```html
@@ -236,4 +354,131 @@ urlpatterns = [
         {% endif %}
     </div>
 {% endfor %}
+```
+
+# Widgets
+
+Formfield แต่ละประเภทจะมีการใช้งาน `Widget` class [Doc](https://docs.djangoproject.com/en/5.2/ref/forms/widgets/)
+
+ซึ่ง widget นี้ละที่เป็นตัวกำหนด input tag ที่เหมาะสม ยกตัวอย่างเช่น `CharField` จะมี `TextInput` widget ซึ่งจะถูกแปลงเป็น ```<input type="text">``` ใน HMTL แต่ในตัวอย่างด้านล่างจะเห็นว่า field `message` เราเปลี่ยนไปเป็น widget `Textarea` แทน
+
+```python
+from django import forms
+
+
+class ContactForm(forms.Form):
+    subject = forms.CharField(max_length=100)
+    message = forms.CharField(widget=forms.Textarea)
+    sender = forms.EmailField()
+    cc_myself = forms.BooleanField(required=False)
+```
+
+## TUTORIAL การใช้งาน WIDGET
+
+เรามาปรับเพิ่ม field ใน form `ContactForm` กันนะครับโดยเพิ่ม field `issue_date` และ `department` ดังนี้
+
+```python
+import datetime
+from django import forms
+
+
+DEPARTMENT_CHOICES = (
+    ("it", "IT"),
+    ("hr", "Human resource"),
+    ("fi", "Finance"),
+    ("ac", "Accounting"),
+)
+
+class ContactForm(forms.Form):
+    subject = forms.CharField(max_length=100)
+    message = forms.CharField(widget=forms.Textarea)
+    sender = forms.EmailField()
+    cc_myself = forms.BooleanField(required=False)
+    issue_date = forms.DateField(widget=forms.SelectDateWidget(
+        years=range(datetime.date.today().year - 5, datetime.date.today().year + 1))
+    )
+    department = forms.ChoiceField(
+        choices=GEEKS_CHOICES, 
+        label='I agree to the terms and conditions',
+        widget=forms.CheckboxInput
+    )
+```
+
+ลองทำการ render แบบ manual กัน
+
+```html
+{{ form.non_field_errors }}
+<div class="fieldWrapper">
+    {{ form.subject.errors }}
+    <label for="{{ form.subject.id_for_label }}">Email subject:</label>
+    {{ form.subject }}
+</div>
+<div class="fieldWrapper">
+    {{ form.message.errors }}
+    <label for="{{ form.message.id_for_label }}">Your message:</label>
+    {{ form.message }}
+</div>
+<div class="fieldWrapper">
+    {{ form.sender.errors }}
+    <label for="{{ form.sender.id_for_label }}">Your email address:</label>
+    {{ form.sender }}
+</div>
+<div class="fieldWrapper">
+    {{ form.cc_myself.errors }}
+    <label for="{{ form.cc_myself.id_for_label }}">CC yourself?</label>
+    {{ form.cc_myself }}
+</div>
+<!-- 
+ Add the 2 new fields here
+ -->
+```
+
+แก้ไขใน `views.py`
+
+```python
+from django.http import HttpResponse
+from django.shortcuts import render, redirect
+
+from contact.forms import ContactForm
+
+def contact_us(request):
+
+    if request.method == "POST":
+        # bind data to form
+        form = ContactForm(request.POST)
+        # validate data in the form
+        if form.is_valid():
+            # access cleaned_data
+            subject = form.cleaned_data["subject"]
+            message = form.cleaned_data["message"]
+            sender = form.cleaned_data["sender"]
+            cc_myself = form.cleaned_data["cc_myself"]
+            # ADD 2 NEW FIELDS HERE ---
+
+            # ---
+
+            print("Subject", subject)
+            print("Message", message)
+            print("Sender", sender)
+            print("CC myself?", cc_myself)
+            # ADD 2 NEW FIELDS HERE ---
+
+            # ---
+
+            # Assume that this view send email
+            # recipients = ["info@example.com"]
+            # if cc_myself:
+            #     recipients.append(sender)
+
+            # send_mail(subject, message, sender, recipients)
+
+            # redirect to "thanks" page when the email has been sent
+            return redirect("thanks")
+    else:
+        form = ContactForm()
+    
+    return render(request, "contact_us.html", {"form": form})
+
+def thanks(request):
+    return HttpResponse("THANKS!!!")
 ```
