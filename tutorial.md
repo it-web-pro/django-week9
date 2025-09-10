@@ -398,9 +398,9 @@ class ContactForm(forms.Form):
         years=range(datetime.date.today().year - 5, datetime.date.today().year + 1))
     )
     department = forms.ChoiceField(
-        choices=GEEKS_CHOICES, 
-        label='I agree to the terms and conditions',
-        widget=forms.CheckboxInput
+        choices=DEPARTMENT_CHOICES, 
+        label='Your department',
+        widget=forms.RadioSelect
     )
 ```
 
